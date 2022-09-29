@@ -86,10 +86,7 @@ class CustomLocalMediaMovies(Agent.Movies):
     # Compute the GUID based on the media hash.
     part = media.all_parts()[0]
     
-    # Get the modification time to use as the year.
-    filename = helpers.unicodize(part.file)
-    mod_time = os.path.getmtime(filename)
-    results.Append(MetadataSearchResult(id=part.hash, name=media.name, year=time.localtime(mod_time)[0], lang=lang, score=100))
+    results.Append(MetadataSearchResult(id=part.hash, name=media.name, lang=lang, score=100))
 
   def update(self, metadata, media, lang, force):
     Log('----------------------------------------update------------------------------------------')
