@@ -78,7 +78,7 @@ class CustomLocalMediaMovies(Agent.Movies):
   accepts_from = None
   contributes_to = None
 
-  title_regex = re.compile(r"^(?P<studio>\w+(?:\.\w+)*)\.(?P<datestr>(?:\d{2}|\d{4})\.\d{2}\.\d{2})\.(?P<actress1>\w+(?:(?!\.and\.)\.\w+)?)(?:\.and\.(?P<actress2>\w+\.\w+))?(?:\.(?P<title>[\w\.]+))?\.XXX", re.I)
+  title_regex = re.compile(r"^(?P<studio>\w+(?:\.\w+)*)\.(?P<datestr>(?:\d{2}|\d{4})\.\d{2}\.\d{2})\.(?P<actress1>[a-z]+(?:(?!\.and\.)\.[a-z]+)?)(?:\.and\.(?P<actress2>[a-z]+(?:\.[a-z]+)?))?(?:\.(?P<title>[\w\.]+))?\.XXX", re.I)
   actress_photos = {}
   
   def search(self, results, media, lang):
