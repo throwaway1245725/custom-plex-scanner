@@ -168,15 +168,17 @@ def get_from_freeones(actor_name):
   else:
     actor_photo_url = ''
     req = requests.request('GET', 'https://www.freeones.com/performers?q=' + urllib.quote(actor_name))
+    Log('-------------------------------fetching freeones for "{}"'.format(actor_name))
     actor_search = HTML.ElementFromString(req.text)
     actor_page_url = actor_search.xpath('//div[contains(@class, "grid-item")]//a/@href')
     if actor_page_url:
         actor_page_url = actor_page_url[0].replace('/feed', '/bio', 1)
         actor_page_url = 'https://www.freeones.com' + actor_page_url
         req = requests.request('GET', actor_page_url)
+        Log('-------------------------------fetching bio at "{}"'.format(actor_page_url))
         actor_page = HTML.ElementFromString(req.text)
 
-        db_actor_name = actor_page.xpath('//h1')[0].text_content().lower().replace(' bio', '').strip()
+        db_actor_name = actor_page.xpath('//h2')[0].text_content().lower().replace('about ', '').strip()
         aliases = actor_page.xpath('//span[contains(., "Aliases")]/following-sibling::span')
         if aliases:
             aliases = aliases[0].text_content().strip()
@@ -186,8 +188,10 @@ def get_from_freeones(actor_name):
                 aliases = []
 
         aliases.append(db_actor_name)
+        Log('-------------------------------aliases: "{}"'.format(aliases))
 
         img = actor_page.xpath('//div[contains(@class, "dashboard-image-container")]//a/img/@src')
+        Log('-------------------------------found img url: "{}"'.format(img[0]))
 
         is_true = False
         professions = actor_page.xpath('//span[contains(., "Profession")]/following-sibling::span')
@@ -200,6 +204,7 @@ def get_from_freeones(actor_name):
                     is_true = True
                     break
 
+        Log('-------------------------------professions: "{}"'.format(professions))
         if img and actor_name.lower() in aliases and is_true:
             actor_photo_url = img[0]
     actor_photo_urls[actor_name] = actor_photo_url
