@@ -167,7 +167,7 @@ def get_from_freeones(actor_name):
     return actor_photo_urls[actor_name]
   else:
     actor_photo_url = ''
-    req = requests.request('GET', 'https://www.freeones.com/babes?q=' + urllib.quote(actor_name))
+    req = requests.request('GET', 'https://www.freeones.com/performers?q=' + urllib.quote(actor_name))
     actor_search = HTML.ElementFromString(req.text)
     actor_page_url = actor_search.xpath('//div[contains(@class, "grid-item")]//a/@href')
     if actor_page_url:
@@ -177,7 +177,7 @@ def get_from_freeones(actor_name):
         actor_page = HTML.ElementFromString(req.text)
 
         db_actor_name = actor_page.xpath('//h1')[0].text_content().lower().replace(' bio', '').strip()
-        aliases = actor_page.xpath('//p[contains(., "Aliases")]/following-sibling::div/p')
+        aliases = actor_page.xpath('//span[contains(., "Aliases")]/following-sibling::span')
         if aliases:
             aliases = aliases[0].text_content().strip()
             if aliases:
@@ -187,16 +187,16 @@ def get_from_freeones(actor_name):
 
         aliases.append(db_actor_name)
 
-        img = actor_page.xpath('//div[contains(@class, "image-container")]//a/img/@src')
+        img = actor_page.xpath('//div[contains(@class, "dashboard-image-container")]//a/img/@src')
 
         is_true = False
-        professions = actor_page.xpath('//p[contains(., "Profession")]/following-sibling::div/p')
+        professions = actor_page.xpath('//span[contains(., "Profession")]/following-sibling::span')
         if professions:
             professions = professions[0].text_content().strip()
 
             for profession in professions.split(','):
                 profession = profession.strip()
-                if profession in ['Porn Stars', 'Adult Models']:
+                if profession in ['Porn Star', 'Adult Model']:
                     is_true = True
                     break
 
